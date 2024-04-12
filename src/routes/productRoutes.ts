@@ -1,18 +1,17 @@
-import express, { Request, Response } from 'express'
-import productService from '../services/productService'
+import express from 'express'
+import {
+  createProduct,
+  getAllProducts,
+  getProductById,
+} from '../controllers/productController'
 
 const router = express.Router()
 
-// dohvacanje svih produkata kao liste
-
-router.get('/', (req: Request, res: Response) => {
-  res.send(productService.getAllProducts())
-})
-
+// dohvacanje svih produkta kao liste
+router.get('/', getAllProducts)
 // dohvacanje jednog produkta kao detalji produkta pomocu product id-a
+router.get('/:id', getProductById)
 
-router.get('/:id', (req: Request, res: Response) => {
-  res.send(productService.getProductById(Number.parseInt(req.params.id, 10)))
-})
+router.post('/', createProduct)
 
 export default router

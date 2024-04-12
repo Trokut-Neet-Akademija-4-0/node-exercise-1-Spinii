@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import HttpError from '../services/productService'
+import HttpError from '../utils/HttpError'
 
-function ErrorHandler(
+function errorHandler(
   err: Error,
   req: Request,
   res: Response,
@@ -12,9 +12,10 @@ function ErrorHandler(
   }
 
   const statusCode = err instanceof HttpError ? err.statusCode : 500
-  const message = err.message || 'internal server error'
+  const message = err.message || 'Internal Server Error'
 
   res.status(statusCode).json({ error: message })
+  return next()
 }
 
-export default ErrorHandler()
+export default errorHandler
