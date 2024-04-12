@@ -1,28 +1,36 @@
-import Product from '../models/interfaces/productInterface'
+import IProduct from '../models/interfaces/productInterface'
 import products from '../models/productsModel'
-import HttpError from '../middlewares/ErrorHandler'
+import HttpError from '../utils/HttpError'
 
 class ProductService {
-  private products: Product[] = products
+  private products: IProduct[] = products
 
-  getAllProducts(): Product[] {
+  getAllProducts(): IProduct[] {
     return this.products
   }
 
-  getProductById(id: number): Product | undefined {
+  getProductById(id: number): IProduct {
     const foundProduct = this.products.find((product) => product.id === id)
-    if (!foundProduct) {
-      throw new HttpError(404, 'Cart product with id ' + id + ' not found')
-    }
+    if (!foundProduct)
+      throw new HttpError(404, `Product with id ${id} not found`)
+    return foundProduct
   }
 
-  deleteProductById(id: number): Product | undefined {
+  deleteProductById(id: number): IProduct {
     const indexToDelete = this.products.findIndex(
       (product) => product.id === id,
     )
-    if (indexToDelete < 0) return undefined
+
+    if (indexToDelete < 0)
+      throw new HttpError(404, `Product with id ${id} not found`)
+
     const deletedProduct = this.products.splice(indexToDelete, 1)
     return deletedProduct[0]
+  }
+
+  addNewProduct(product: IProduct): IProduct {
+    this.products.push(product)
+    return product
   }
 }
 
